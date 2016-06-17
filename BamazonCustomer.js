@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
   database : 'bamazon_db'
 });
 
-//Making connection to sql
+//Establishing connection
 connection.connect();
 //Making a query to display all of the products available
 connection.query('SELECT * FROM product', function(err, rows, fields) {
@@ -46,7 +46,7 @@ inquirer.prompt([
 						console.log("Total transaction cost: " + cost)
 						
 						var updateQuantity = rows[0].stockQuantity - response.quantity; 
-						
+
 						connection.query('UPDATE product SET ? WHERE ?', [{stockQuantity: updateQuantity}, 
 							{itemID: response.itemID}], function(err,rows,fields) {
 							if (err) throw err;
