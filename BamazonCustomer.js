@@ -23,12 +23,13 @@ connection.query('SELECT * FROM product', function(err, rows, fields) {
 	start()
 });
 
+//Main function for this script file
 function start() {
 inquirer.prompt([
 		{
 			type: 'input',
 			name: 'itemID',
-			message: 'Which item ID would you like to buy?'
+			message: 'Which item ID would you like to buy (Ctrl + C to exit)?'
 		},
 		{
 			type: 'input',
@@ -41,22 +42,22 @@ inquirer.prompt([
 
 					//If user input quantity is less than or equal to the stock quantity, allow purchase
 					if (response.quantity <= rows[0].stockQuantity) {
-
+						//Calculate total cost of transaction
 						var cost = response.quantity * rows[0].price;
-						console.log("Total transaction cost: " + cost)
-						
+						console.log("Total transaction cost: " + cost);
+						//Calculate the new available quantity after purchase
 						var updateQuantity = rows[0].stockQuantity - response.quantity; 
-
+						//Update the database with the new quantity
 						connection.query('UPDATE product SET ? WHERE ?', [{stockQuantity: updateQuantity}, 
 							{itemID: response.itemID}], function(err,rows,fields) {
 							if (err) throw err;
-							console.log(rows)
 						})
+					start();
 					}
 					else {
-						console.log('Not enough items in stock.')
+						console.log('Not enough items in stock.');
+						start();
 					}
 			})
-
 });
 }
