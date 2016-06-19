@@ -47,17 +47,26 @@ inquirer.prompt([
 						console.log("Total transaction cost: " + cost);
 						//Calculate the new available quantity after purchase
 						var updateQuantity = rows[0].stockQuantity - response.quantity; 
-						//Update the database with the new quantity
+						//Update the product table with the new quantity
 						connection.query('UPDATE product SET ? WHERE ?', [{stockQuantity: updateQuantity}, 
 							{itemID: response.itemID}], function(err,rows,fields) {
 							if (err) throw err;
 						})
-					start();
-					}
-					else {
+						
+						//Update the department table
+						connection.query('SELECT * FROM department WHERE ?', {departmentName: rows[0].departmentName}, function(err,rows,fields) {
+						var updateTotal = rows[0].totalSales + cost;
+						connection.query('UPDATE department SET ? WHERE ?', [{totalSales: updateTotal}, 
+							{departmentName: rows[0].departmentName}], function(err,rows,fields) {
+							if (err) throw err;
+						})
+						})
+						start();
+						}
+						else {
 						console.log('Not enough items in stock.');
 						start();
-					}
-			})
+						}
+			})//close top connection query
 });
 }
