@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "better-console": "^0.2.4",
+    "better-console": "^1.0.0",
     "console.table": "^0.10.0",
     "inquirer": "^1.0.3",
     "mysql": "^2.11.1",
